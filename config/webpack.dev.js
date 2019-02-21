@@ -36,7 +36,11 @@ module.exports = {
   module: {
     rules: [
       { test: /\.tsx?$/, loader: require.resolve('ts-loader') },
-      { enforce: 'pre', test: /\.js$/, loader: require.resolve('source-map-loader') }
+      { enforce: 'pre', test: /\.js$/, loader: require.resolve('source-map-loader') },
+      {
+        test: /\.scss$/,
+        use: ['style-loader', 'css-loader', 'sass-loader']
+      }
     ]
   },
   externals: {
@@ -55,6 +59,12 @@ module.exports = {
     ],
     compress: true,
     port: 9000,
-    hot: true
+    hot: true,
+    open: true,
+    noInfo: false,
+    watchOptions: {
+      aggregateTimeout: 300,
+      poll: 1000
+    }
   }
 };

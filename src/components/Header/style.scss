@@ -1,0 +1,21 @@
+.navigation-bar {
+  width: auto;
+  display: inline-block;
+  float: left;
+  margin-top: 20px;
+  margin-left: -24px;
+}
+
+.user-avatar {
+  margin-right: 10px;
+  background: rgb(0, 21, 41);
+}
+
+.user-name {
+  font-weight: bold;
+  margin-right: 16px;
+}
+
+.logout-button {
+  margin-right: -24px;
+}
