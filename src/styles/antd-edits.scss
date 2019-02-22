@@ -15,6 +15,7 @@
 .ant-breadcrumb-separator,
 .ant-breadcrumb-link {
   color: white;
+  text-decoration: none;
 }
 
 .ant-layout-header {
@@ -24,6 +25,7 @@
   .ant-breadcrumb-link,
   .ant-breadcrumb-separator {
     color: rgba(0, 0, 0, 0.65);
+    text-decoration: none;
   }
 }
 
