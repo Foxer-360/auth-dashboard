@@ -1,3 +1,4 @@
+const fs = require('fs');
 const path = require('path');
 const Visualizer = require('webpack-visualizer-plugin');
 const ExtractCssChunks = require('extract-css-chunks-webpack-plugin');
@@ -10,8 +11,17 @@ const publicDir = path.resolve(__dirname, '../public');
 const bundleVisualization = './statistics.html';
 
 // Path to React and React DOM libs
-const node_modules = path.resolve(__dirname, '../node_modules');
-const react = path.resolve(node_modules, 'react/umd');
+let node_modules = path.resolve(__dirname, '../node_modules');
+let react = path.resolve(node_modules, 'react/umd');
+if (!fs.existsSync(react)) {
+  // This package is maybe called as workspace, change node_modules
+  node_modules = path.resolve(__dirname, '../../node_modules');
+  react = path.resolve(node_modules, 'react/umd');
+  if (!fs.existsSync(react)) {
+    console.log('React package is not found!');
+    process.exit(1);
+  }
+}
 const react_dom = path.resolve(node_modules, 'react-dom/umd');
 
 // Path to AntDesign
