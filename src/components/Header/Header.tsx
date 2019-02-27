@@ -2,6 +2,7 @@ import { Avatar, Button, Layout } from 'antd';
 import * as React from 'react';
 
 import Navigation from '@source/components/Navigation';
+import { logout } from '@source/services/auth0';
 import './style.scss';
 
 const Header = () => {
@@ -22,6 +23,7 @@ const Header = () => {
       <Button
         className="logout-button"
         type="danger"
+        onClick={() => logout()}
       >
         Logout
       </Button>

@@ -2,6 +2,8 @@ const fs = require('fs');
 const path = require('path');
 const Visualizer = require('webpack-visualizer-plugin');
 const ExtractCssChunks = require('extract-css-chunks-webpack-plugin');
+const webpack = require('webpack');
+const stringifiedEnv = require('./env');
 
 const appSrc = path.resolve(__dirname, '../src');
 const entryFile = path.resolve(appSrc, 'index.tsx');
@@ -78,6 +80,9 @@ module.exports = {
     new Visualizer({
       filename: bundleVisualization
     }),
+    // Make some environment variables available to the JS code, for example
+    // variable process.env.AUTH0_CLIENT_ID
+    new webpack.DefinePlugin(stringifiedEnv),
   ],
   externals: {
     'react': 'React',
