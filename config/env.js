@@ -10,7 +10,9 @@ const masterRepoEnv = path.resolve(masterRepo, '.env');
 
 // Enabled env variables
 const enabled = [
-  'AUTH0_CLIENT_ID', 'AUTH0_CLIENT_DOMAIN', 'AUTH0_REDIRECT', 'AUTH0_AUDIENCE'
+  'AUTH0_CLIENT_ID', 'AUTH0_CLIENT_DOMAIN', 'AUTH0_REDIRECT', 'AUTH0_AUDIENCE',
+  'GRAPHQL_SERVER_HOST', 'GRAPHQL_SERVER_PORT', 'GRAPHQL_SERVER_PATH',
+  'GRAPHQL_SUBSCRIPTIONS_HOST', 'GRAPHQL_SUBSCRIPTIONS_PORT', 'GRAPHQL_SUBSCRIPTIONS_PATH'
 ];
 
 // Check if .env file exists and load it, or fail
