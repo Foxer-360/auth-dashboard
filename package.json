@@ -26,6 +26,7 @@
     "auth0-js": "^9.10.0",
     "dotenv": "^6.2.0",
     "graphql": "^14.1.1",
+    "graphql-tag": "^2.10.1",
     "history": "^4.7.2",
     "jwt-decode": "^2.2.0",
     "react": "^16.8.2",

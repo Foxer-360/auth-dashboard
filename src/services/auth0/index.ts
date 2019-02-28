@@ -303,6 +303,25 @@ const getExpiresAt = () => {
 };
 
 /**
+ * Simple function to decode Access token and parse auth0Id
+ */
+const getAuth0Id = () => {
+  if (!window) { return null; };
+
+  const accessToken = getAccessToken();
+  if (!accessToken) { return null; }
+
+  const { sub } = decode<{ sub: string }>(accessToken);
+  if (!sub) { return null; };
+
+  const regex = /^.*\|([^\|]+)$/gi;
+  const res = regex.exec(sub);
+  if (!res || !res[1]) { return null; };
+
+  return res[1];
+};
+
+/**
  * Simple helper to show debug message
  */
 const debug = (type: string, ...args: any[]) => {
@@ -330,6 +349,7 @@ const debug = (type: string, ...args: any[]) => {
 export {
   clearSession,
   getAccessToken,
+  getAuth0Id,
   getExpiresAt,
   getIdToken,
   isLoggedIn,
