@@ -34,6 +34,7 @@
     "suppressImplicitAnyIndexErrors": true,
     "noUnusedLocals": true,
     "strict": true,
+    "skipLibCheck": true,
     "paths": {
       "@source/*": ["./src/*"]
     },

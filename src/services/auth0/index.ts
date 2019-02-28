@@ -190,6 +190,8 @@ const getParameterFromUrlByName = (name: string): string | null => {
  * @param {Date} expiresAt
  */
 const saveIntoLocalStorage = (idToken: string, accessToken: string, expiresAt: Date) => {
+  if (!window) { return; }
+
   localStorage.setItem(StorageDef.idToken, idToken);
   localStorage.setItem(StorageDef.accessToken, accessToken);
   localStorage.setItem(StorageDef.expiresAt, expiresAt.getTime().toString());
@@ -200,6 +202,8 @@ const saveIntoLocalStorage = (idToken: string, accessToken: string, expiresAt: D
  * example after logout.
  */
 const clearLocalStorage = () => {
+  if (!window) { return; }
+
   localStorage.removeItem(StorageDef.idToken);
   localStorage.removeItem(StorageDef.accessToken);
   localStorage.removeItem(StorageDef.expiresAt);
@@ -238,6 +242,8 @@ const setupRenewTimer = (expiresIn: number | string) => {
  * Simple check, if token of current session is already expired.
  */
 const isTokenExpired = () => {
+  if (!window) { return true; }
+
   const expiresAt = localStorage.getItem(StorageDef.expiresAt);
   if (!expiresAt) {
     return true;
@@ -251,6 +257,8 @@ const isTokenExpired = () => {
  * also check, if we have setup timer for renew.
  */
 const isLoggedIn = () => {
+  if (!window) { return false; }
+
   const idToken = localStorage.getItem(StorageDef.idToken);
   const loggedIn = !!idToken && !isTokenExpired();
 
@@ -271,6 +279,8 @@ const isLoggedIn = () => {
  * Simple getter for ID token from local storage
  */
 const getIdToken = () => {
+  if (!window) { return null; }
+
   return localStorage.getItem(StorageDef.idToken);
 };
 
@@ -278,6 +288,8 @@ const getIdToken = () => {
  * Simple getter for Access token from local storage
  */
 const getAccessToken = () => {
+  if (!window) { return null; }
+
   return localStorage.getItem(StorageDef.accessToken);
 };
 
@@ -285,6 +297,8 @@ const getAccessToken = () => {
  * Simple getter for expires at from local storage
  */
 const getExpiresAt = () => {
+  if (!window) { return null; }
+
   return localStorage.getItem(StorageDef.expiresAt);
 };
 

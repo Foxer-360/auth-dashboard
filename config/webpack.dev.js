@@ -52,7 +52,12 @@ module.exports = {
   module: {
     rules: [
       { test: /\.tsx?$/, loader: require.resolve('ts-loader') },
-      { enforce: 'pre', test: /\.js$/, loader: require.resolve('source-map-loader') },
+      {
+        enforce: 'pre',
+        test: /\.js$/,
+        loader: require.resolve('source-map-loader'),
+        exclude: [/node_modules/]
+      },
       // Load all CSS files
       {
         test: /\.css$/,

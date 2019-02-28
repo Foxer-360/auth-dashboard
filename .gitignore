@@ -3,3 +3,6 @@ node_modules
 
 # Ignore builded code
 build
+
+# Ignore logs
+yarn-error.log
