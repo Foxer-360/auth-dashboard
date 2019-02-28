@@ -78,10 +78,7 @@ const logout = (err?: boolean) => {
  * Simple function which will renew token in Auth0
  */
 const renew = () => {
-  if (Env === 'development' && DEBUG_MESSAGES) {
-    // tslint:disable-next-line:no-console
-    console.log('%c[Auth] Renewing token...', 'color: green');
-  }
+  debug('info', '%c[Auth] Renewing token...', 'color: green');
   auth.checkSession({
     audience: Auth0Def.audience,
     redirectUri: Auth0Def.redirect,
@@ -90,10 +87,7 @@ const renew = () => {
   }, (err, authResult) => {
     if (err) {
       // Log this error into console on development env
-      if (Env === 'development' && DEBUG_MESSAGES) {
-        // tslint:disable-next-line:no-console
-        console.error(`[Auth] Renew token error: %c${err.error}`, 'font-weight: bold', err);
-      }
+      debug('error', `[Auth] Renew token error: %c${err.error}`, 'font-weight: bold', err);
       logout(true);
     } else {
       setupSession(authResult);
@@ -113,10 +107,7 @@ const setupSession = (authResult?: IAuth0Result) => {
     const error = getParameterFromUrlByName('error');
     if (error) {
       // Log this error into console on development env
-      if (Env === 'development' && DEBUG_MESSAGES) {
-        // tslint:disable-next-line:no-console
-        console.error(`[Auth] Login error: %c${error}`, 'font-weight: bold');
-      }
+      debug('error', `[Auth] Login error: %c${error}`, 'font-weight: bold');
       logout(true);
       return;
     }
@@ -143,11 +134,8 @@ const setupSession = (authResult?: IAuth0Result) => {
   // Save into local storage all informations
   saveIntoLocalStorage(idToken, accessToken, expiresAt);
 
-  // Start timer for renewing of token, only if reasonable expiresIn is
-  // defined
-  if (expiresIn > 10) {
-    setupRenewTimer(expiresIn);
-  }
+  // Setup renew token timer only on reasonable time
+  if (expiresIn > 10) { setupRenewTimer(expiresIn); }
 };
 
 /**
@@ -239,10 +227,7 @@ const setupRenewTimer = (expiresIn: number | string) => {
     }
   }
 
-  if (Env === 'development' && DEBUG_MESSAGES) {
-    // tslint:disable-next-line:no-console
-    console.log(`%c[Auth] Setup renew timer to ${expiresIn / 1000} seconds`, 'color: green');
-  }
+  debug('info', `%c[Auth] Setup renew timer to ${expiresIn / 1000} seconds`, 'color: green');
 
   renewTimerInstance = setTimeout(() => {
     renew();
@@ -301,6 +286,30 @@ const getAccessToken = () => {
  */
 const getExpiresAt = () => {
   return localStorage.getItem(StorageDef.expiresAt);
+};
+
+/**
+ * Simple helper to show debug message
+ */
+const debug = (type: string, ...args: any[]) => {
+  if (Env !== 'development' || !DEBUG_MESSAGES) { return; }
+
+  switch (type) {
+    case 'error':
+      // tslint:disable-next-line:no-console
+      console.error(...args);
+      return;
+    case 'warn':
+      // tslint:disable-next-line:no-console
+      console.warn(...args);
+      return;
+    case 'info':
+      // tslint:disable-next-line:no-console
+      console.log(...args);
+      return;
+    default:
+      return;
+  }
 };
 
 

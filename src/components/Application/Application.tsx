@@ -1,49 +1,18 @@
 import * as React from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { Router } from 'react-router';
+import { Route } from 'react-router-dom';
 
+import AuthProvider from '@source/components/AuthProvider';
 import Layout from '@source/components/Layout';
-import { isLoggedIn, login, setupSession } from '@source/services/auth0';
+import history from '@source/services/history';
 
-// Define Login rutine... If we are not logged, show login screen, if we
-// return from login screen, parse tokens and continue to homepage
-const authRutine = (): boolean => {
-  // If we have no window object, then it's not logged
-  if (!window || !window.location || !window.location.pathname) {
-    return false;
-  }
 
-  // Callback from Login screen
-  const pathRegex = /.*\/callback.*/gi;
-  if (pathRegex.test(window.location.pathname)) {
-    setupSession();
-
-    // Redirect to homepage
-    window.location.replace('/');
-
-    return false;
-  }
-
-  if (isLoggedIn()) {
-    return true;
-  }
-
-  // Redirect to login screen
-  login();
-
-  return false;
-};
-
-const Application = () => {
-  // Do Auth rutine
-  if (!authRutine()) {
-    return null;
-  }
-
-  return (
-    <Router>
+const Application = () => (
+  <Router history={history}>
+    <AuthProvider>
       <Route path="/" component={Layout} />
-    </Router>
-  );
-};
+    </AuthProvider>
+  </Router>
+);
 
 export default Application;
