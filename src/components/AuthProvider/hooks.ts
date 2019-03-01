@@ -10,11 +10,12 @@ import history from '@source/services/history';
  * Custom Hook, to handle Auth0 login logic. It returns user profile with flag
  * if user is logged in and also it returns loading flag.
  *
- * @return {[boolean, IAuthUserProperties]} loading, userProfile
+ * @return {[boolean, IAuthUserProperties], string[]} loading, userProfile
  */
-const useAuth0User = (): [boolean, IAuthUserProperties] => {
+const useAuth0User = (): [boolean, IAuthUserProperties, string[] | null] => {
   const [state, setState] = useState(authUserDefaults);
   const [loading, setLoading] = useState(false);
+  const [errs, setErrors] = useState([] as string[]);
 
   const USER_PROFILE = gql`
     query UserProfile($auth0Id: ID!) {
@@ -45,11 +46,34 @@ const useAuth0User = (): [boolean, IAuthUserProperties] => {
 
       // Fetch data about user profile and setup state
       if (loading) { return; }
+
+      // Some errors ? Do not fetch again
+      if (errs.length > 0) { return; }
+
       setLoading(true);
       client.query({ query: USER_PROFILE, variables: { auth0Id } })
-      .then(({ data }) => {
+      .then(({ data, errors }) => {
+        if (errors) {
+          // Error
+          // tslint:disable-next-line:no-console
+          console.error(`%c[Auth]%c Error while loading user profile`, 'font-weight: bold', 'font-weight: normal', errors);
+          setErrors(old => ([
+            ...old,
+            'Error while loading user profile',
+          ]));
+          setLoading(false);
+          return;
+        }
         if (!data || !data.users || !data.users[0]) {
           // Error or User is not found
+          // tslint:disable-next-line:no-console
+          console.log(`%c[Auth]%c User with Auth0 ID %c${auth0Id}%c was not found in our Auth System!`,
+            'color: blue; font-weight: bold', 'color: blue', 'color: green; font-weight: bold', 'color: blue');
+          setErrors(old => ([
+            ...old,
+            `User with Auth ID ${auth0Id} was not found in our Auth System!`,
+          ]));
+          setLoading(false);
           return;
         }
 
@@ -86,7 +110,11 @@ const useAuth0User = (): [boolean, IAuthUserProperties] => {
     login();
   });
 
-  return [loading, state];
+  if (errs.length < 1) {
+    return [loading, state, null];
+  }
+
+  return [loading, state, errs];
 }
 
 

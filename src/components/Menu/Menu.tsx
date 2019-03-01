@@ -1,6 +1,9 @@
 import { Icon, Menu as AntdMenu } from 'antd';
 import * as React from 'react';
+import { useContext } from 'react';
 import { Link } from 'react-router-dom';
+
+import AuthUser from '@source/contexts/AuthUser';
 
 export interface IProperties {
   path?: string;
@@ -21,12 +24,31 @@ const getMenuKeyFromPath = (path: string): string => {
     case 'user':
     case 'users':
       return 'users';
+    case 'clients':
+      return 'clients';
     case 'settings':
       return 'settings';
+    case 'notfound':
+      return 'notfound';
     default:
       return '';
   }
 };
+
+interface IItemDefProperties {
+  name: string;
+  to: string;
+  type: string;
+}
+
+const { Item } = AntdMenu;
+
+const ItemDef = ({ name, to, type }: IItemDefProperties) => (
+  <Link to={to}>
+    <Icon type={type} />
+    <span>{name}</span>
+  </Link>
+);
 
 const Menu = ({ path }: IProperties) => {
   let key = '';
@@ -34,26 +56,33 @@ const Menu = ({ path }: IProperties) => {
     key = getMenuKeyFromPath(path);
   }
 
+  const { isSuperUser } = useContext(AuthUser);
+
   return (
     <AntdMenu theme="dark" selectedKeys={[key]}>
-      <AntdMenu.Item key="dashboard">
-        <Link to="/">
-          <Icon type="dashboard" />
-          <span>Dashboard</span>
-        </Link>
-      </AntdMenu.Item>
-      <AntdMenu.Item key="users">
-        <Link to="/users">
-          <Icon type="user" />
-          <span>Users</span>
-        </Link>
-      </AntdMenu.Item>
-      <AntdMenu.Item key="settings">
-        <Link to="/settings">
-          <Icon type="setting" />
-          <span>Settings</span>
-        </Link>
-      </AntdMenu.Item>
+      <Item key="dashboard">
+        <ItemDef name="Dashboard" to="/" type="dashboard" />
+      </Item>
+
+      {
+        isSuperUser ?
+          <Item key="clients">
+            <ItemDef name="Clients" to="/clients" type="deployment-unit" />
+          </Item>
+        : null
+      }
+
+      <Item key="settings">
+        <ItemDef name="Settings" to="/settings" type="setting" />
+      </Item>
+
+      {
+        isSuperUser ?
+          <Item key="notfound">
+            <ItemDef name="NotFound Test" to="/notfound" type="eye" />
+          </Item>
+        : null
+      }
     </AntdMenu>
   );
 };
