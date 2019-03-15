@@ -1,19 +1,18 @@
-import { Button, Input, Table } from 'antd';
+import { Button, Input, Table, Tag } from 'antd';
 import * as React from 'react';
+import { useState } from 'react';
 
 import Actions from './components/Actions';
 import Avatar from './components/Avatar';
+import Errors from './components/Errors';
+import { IClient, IUserRecord, useUsers } from './hooks';
 
-interface ILooseObject {
-  // tslint:disable-next-line:no-any
-  [key: string]: any;
-}
 
 const columns = [
   {
     align: 'center' as 'center',
     dataIndex: 'avatar',
-    render: (url: string, record: ILooseObject) => <Avatar name={record.name} url={url} />,
+    render: (url: string, record: IUserRecord) => <Avatar name={record.name} url={url} />,
     title: '',
     width: '60px',
   },
@@ -28,39 +27,58 @@ const columns = [
     title: 'Email',
   },
   {
+    dataIndex: 'clients',
+    render: (clients: IClient[]) => (<>{clients.map((client) => <Tag color="volcano" key={client.id}>client.name</Tag>)}</>),
+    title: 'Clients',
+  },
+  {
+    dataIndex: 'id',
     key: 'actions',
-    render: () => <Actions />,
+    render: (id: string) => <Actions id={id} />,
     title: 'Actions',
   }
 ];
 
-const data = [
-  {
-    auth0Id: 'fa17c0debc23ebc6d201',
-    avatar: 'https://lh3.googleusercontent.com/a-/AAuE7mDINeUqhlfHhmSUpart4MhSd4brkSbrJ-j3lSw9Bw=s192',
-    email: 'nevim42@gmail.com',
-    id: 'b1a6bc94a00e01062fbd',
-    name: 'Filip Suchy',
-  },
-  {
-    auth0Id: 'fa17c0debc23ebc6d201',
-    avatar: null,
-    email: 'pavel.krcil@foxmedia.cz',
-    id: 'b1a6bc94a00e01062fbd',
-    name: 'Pavel Krcil',
-  }
-];
 
 const Users = () => {
+  const [users, errors, loading] = useUsers();
+  const [search, setSearch] = useState('');
+
+  let filteredUsers = users as IUserRecord[];
+  if (search.length > 1) {
+    filteredUsers = filteredUsers.filter((rec) => {
+      const regex = RegExp(`.*${search}.*`);
+      if (regex.test(rec.name) || regex.test(rec.email)) {
+        return true;
+      }
+
+      return false;
+    });
+  }
+
+  const updateSearch = (value: string) => {
+    setSearch(value);
+  };
+
   return (
-    <div className='users-scene'>
-      <Button type="primary">Add new user</Button>
-      <Input style={{ width: '240px' }} placeholder="Search user name" />
-      <br /><br />
+    <div className="users-scene">
+      <div style={{ marginBottom: '24px' }}>
+        <Button type="primary">Add new users</Button>
+        <Input.Search
+          placeholder="Search for User"
+          enterButton="Search"
+          style={{ width: '520px', marginLeft: '24px' }}
+          onSearch={updateSearch}
+        />
+      </div>
+
+      <Errors errors={errors} />
+
       <Table
         columns={columns}
-        dataSource={data}
+        dataSource={filteredUsers as IUserRecord[]}
         size="middle"
+        loading={loading as boolean}
       />
     </div>
   );

@@ -6,6 +6,7 @@ export interface IAuthUserProperties {
   isLogged: boolean;
   isSuperUser: boolean;
   name: string;
+  userId: string;
 }
 
 export const defaultValues = {
@@ -14,6 +15,7 @@ export const defaultValues = {
   isLogged: false,
   isSuperUser: false,
   name: 'Undefined',
+  userId: '',
 } as IAuthUserProperties;
 
 const AuthUser = createContext(defaultValues);

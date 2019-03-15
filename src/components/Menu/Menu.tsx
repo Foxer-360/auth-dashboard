@@ -72,6 +72,10 @@ const Menu = ({ path }: IProperties) => {
         : null
       }
 
+      <Item key="users">
+        <ItemDef name="Users" to="/users" type="team" />
+      </Item>
+
       <Item key="settings">
         <ItemDef name="Settings" to="/settings" type="setting" />
       </Item>

@@ -19,6 +19,7 @@ const Header = () => {
       <Avatar
         className="user-avatar"
         size="large"
+        shape="square"
         src={avatar}
       >
         UN

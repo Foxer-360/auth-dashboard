@@ -85,6 +85,7 @@ const useAuth0User = (): [boolean, IAuthUserProperties, string[] | null] => {
           isLogged: true,
           isSuperUser: profile.superuser,
           name: profile.name,
+          userId: profile.id,
         }));
         setLoading(false);
       });

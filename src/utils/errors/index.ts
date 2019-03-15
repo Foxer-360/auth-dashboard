@@ -1,3 +1,14 @@
+class ApolloClientIsNotSet extends Error {
+
+  constructor() {
+    const msg = `Apollo client is not correctly set in context!`;
+    super(msg);
+
+    Object.setPrototypeOf(this, ApolloClientIsNotSet.prototype);
+  }
+
+}
+
 class IncorrectEnvironmentError extends Error {
 
   constructor(name: string) {
@@ -10,5 +21,6 @@ class IncorrectEnvironmentError extends Error {
 }
 
 export {
+  ApolloClientIsNotSet,
   IncorrectEnvironmentError,
 };

@@ -26,6 +26,7 @@ const Avatar = ({ name, url }: IProperties) => {
       <AntdAvatar
         className="user-avatar"
         size="small"
+        shape="square"
       >
         {getInitials(name)}
       </AntdAvatar>
@@ -36,6 +37,7 @@ const Avatar = ({ name, url }: IProperties) => {
     <AntdAvatar
       className="user-avatar"
       size="small"
+      shape="square"
       src={url}
     />
   );
