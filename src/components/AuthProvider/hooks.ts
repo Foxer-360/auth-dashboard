@@ -30,6 +30,14 @@ const useAuth0User = (): [boolean, IAuthUserProperties, string[] | null] => {
         email
         avatar
         superuser
+        clients {
+          id
+          name
+        }
+        owns {
+          id
+          name
+        }
       }
     }
   `;
@@ -82,9 +90,11 @@ const useAuth0User = (): [boolean, IAuthUserProperties, string[] | null] => {
           ...old,
           auth0Id,
           avatar: profile.avatar,
+          clients: profile.clients,
           isLogged: true,
           isSuperUser: profile.superuser,
           name: profile.name,
+          owns: profile.owns,
           userId: profile.id,
         }));
         setLoading(false);

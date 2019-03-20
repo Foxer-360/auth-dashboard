@@ -7,14 +7,24 @@ export interface IAuthUserProperties {
   isSuperUser: boolean;
   name: string;
   userId: string;
+  clients: Array<{
+    id: string;
+    name: string;
+  }>;
+  owns: Array<{
+    id: string;
+    name: string;
+  }>;
 }
 
 export const defaultValues = {
   auth0Id: '',
   avatar: '',
+  clients: [],
   isLogged: false,
   isSuperUser: false,
   name: 'Undefined',
+  owns: [],
   userId: '',
 } as IAuthUserProperties;
 

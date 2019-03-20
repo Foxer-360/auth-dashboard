@@ -2,6 +2,7 @@ import { Button, Input, Table, Tag } from 'antd';
 import * as React from 'react';
 import { useState } from 'react';
 
+import history from '@source/services/history';
 import Actions from './components/Actions';
 import Avatar from './components/Avatar';
 import Errors from './components/Errors';
@@ -28,7 +29,7 @@ const columns = [
   },
   {
     dataIndex: 'clients',
-    render: (clients: IClient[]) => (<>{clients.map((client) => <Tag color="volcano" key={client.id}>client.name</Tag>)}</>),
+    render: (clients: IClient[]) => (<>{clients.map((client) => <Tag color="volcano" key={client.id}>{client.name}</Tag>)}</>),
     title: 'Clients',
   },
   {
@@ -60,10 +61,14 @@ const Users = () => {
     setSearch(value);
   };
 
+  const handleAddUser = () => {
+    history.push('/user');
+  };
+
   return (
     <div className="users-scene">
       <div style={{ marginBottom: '24px' }}>
-        <Button type="primary">Add new users</Button>
+        <Button type="primary" onClick={handleAddUser}>Add new users</Button>
         <Input.Search
           placeholder="Search for User"
           enterButton="Search"
