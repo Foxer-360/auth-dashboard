@@ -24,16 +24,17 @@ export interface IProperties {
 }
 
 interface IState {
-  avatar: string;
   auth0Id: string;
-  touched: boolean;
-  name: string;
+  avatar: string;
+  clients: string[];
   email: string;
   isSuperuser: boolean;
-  projects: string[],
-  websites: string[],
+  name: string;
   owns: string[];
-  clients: string[];
+  password?: string;
+  projects: string[];
+  touched: boolean;
+  websites: string[];
 }
 
 
@@ -45,6 +46,7 @@ const defaultValues = {
   isSuperuser: false,
   name: '',
   owns: [],
+  password: '',
   projects: [],
   touched: false,
   websites: [],
