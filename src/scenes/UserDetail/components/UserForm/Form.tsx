@@ -126,7 +126,6 @@ const Form = (props: IProperties) => {
             password={props.isNew ? state.password : null}
           />
         </Tabs.TabPane>
-        <Tabs.TabPane tab="Rules" key="rules">Rules</Tabs.TabPane>
       </Tabs>
       <div style={{ marginTop: '24px', float: 'right', marginRight: '12px' }}>
         <Button type="primary" style={{ marginRight: '8px' }} onClick={handleOnSave}>{props.isNew ? 'Create' : 'Save'}</Button>

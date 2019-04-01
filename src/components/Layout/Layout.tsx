@@ -10,6 +10,7 @@ import Header from '@source/components/Header';
 import Logo from '@source/components/Logo';
 import Menu from '@source/components/Menu';
 
+import ClientDetail from '@source/scenes/ClientDetail';
 import Clients from '@source/scenes/Clients';
 import Dashboard from '@source/scenes/Dashboard';
 import NotFound from '@source/scenes/NotFound';
@@ -56,7 +57,8 @@ const Layout = ({ location: { pathname } }: IProperties) => {
             <Route path="/user" component={UserDetail} />
 
             {/* This route is only for SuperUsers */}
-            {isSuperUser ? <Route path="/clients" component={Clients} /> : null}
+            {isSuperUser ? <Route path="/clients" component={Clients} /> : null }
+            {isSuperUser ? <Route path="/client" component={ClientDetail} /> : null }
 
             {/* Show Not Found Scene, if you are trying to access non existing
               page or page which you have no access to it. */}

@@ -1,28 +1,11 @@
-import { Button/*, Col*/, Input, Row, Table } from 'antd';
+import { Alert, Button/*, Col*/, Input, Row, Table } from 'antd';
 import * as React from 'react';
 import { useState } from 'react';
 
-import Form from './components/Form';
+import history from '@source/services/history';
+import Actions from './components/Actions';
+import { useClients } from './hooks';
 
-const Actions = () => (
-  <>
-    <Button
-      type="primary"
-      icon="edit"
-      size="small"
-      style={{ marginRight: '8px' }}
-    >
-      Edit
-    </Button>
-    <Button
-      type="danger"
-      icon="delete"
-      size="small"
-    >
-      Delete
-    </Button>
-  </>
-);
 
 const cutId = (id: string): string => {
   const res = `#${id.substr(0, 6)}...`;
@@ -51,120 +34,12 @@ const columns = [
     width: '120px',
   }, {
     align: 'center' as 'center',
-    render: () => (<Actions />),
+    dataIndex: 'key',
+    render: (id: string) => (<Actions id={id}/>),
     title: "Actions",
     width: '260px',
   }
 ];
-
-const dataSource = [{
-  id: '7234kjnfds98fn234',
-  name: 'FoxMedia Czech Republic',
-  projects: 2,
-  websites: 4,
-}, {
-  id: 'l5498dmn20-cn430392n2340-2',
-  name: 'Koh-I-Noor',
-  projects: 1,
-  websites: 1,
-}, {
-  id: '7234kjnfds98fn234',
-  name: 'FoxMedia Czech Republic',
-  projects: 2,
-  websites: 4,
-}, {
-  id: 'l5498dmn20-cn430392n2340-2',
-  name: 'Koh-I-Noor',
-  projects: 1,
-  websites: 1,
-}, {
-  id: '7234kjnfds98fn234',
-  name: 'FoxMedia Czech Republic',
-  projects: 2,
-  websites: 4,
-}, {
-  id: 'l5498dmn20-cn430392n2340-2',
-  name: 'Koh-I-Noor',
-  projects: 1,
-  websites: 1,
-}, {
-  id: '7234kjnfds98fn234',
-  name: 'FoxMedia Czech Republic',
-  projects: 2,
-  websites: 4,
-}, {
-  id: 'l5498dmn20-cn430392n2340-2',
-  name: 'Koh-I-Noor',
-  projects: 1,
-  websites: 1,
-}, {
-  id: '7234kjnfds98fn234',
-  name: 'FoxMedia Czech Republic',
-  projects: 2,
-  websites: 4,
-}, {
-  id: 'l5498dmn20-cn430392n2340-2',
-  name: 'Koh-I-Noor',
-  projects: 1,
-  websites: 1,
-}, {
-  id: '7234kjnfds98fn234',
-  name: 'FoxMedia Czech Republic',
-  projects: 2,
-  websites: 4,
-}, {
-  id: 'l5498dmn20-cn430392n2340-2',
-  name: 'Koh-I-Noor',
-  projects: 1,
-  websites: 1,
-}, {
-  id: '7234kjnfds98fn234',
-  name: 'FoxMedia Czech Republic',
-  projects: 2,
-  websites: 4,
-}, {
-  id: 'l5498dmn20-cn430392n2340-2',
-  name: 'Koh-I-Noor',
-  projects: 1,
-  websites: 1,
-}, {
-  id: '7234kjnfds98fn234',
-  name: 'FoxMedia Czech Republic',
-  projects: 2,
-  websites: 4,
-}, {
-  id: 'l5498dmn20-cn430392n2340-2',
-  name: 'Koh-I-Noor',
-  projects: 1,
-  websites: 1,
-}, {
-  id: '7234kjnfds98fn234',
-  name: 'FoxMedia Czech Republic',
-  projects: 2,
-  websites: 4,
-}, {
-  id: 'l5498dmn20-cn430392n2340-2',
-  name: 'Koh-I-Noor',
-  projects: 1,
-  websites: 1,
-}, {
-  id: '7234kjnfds98fn234',
-  name: 'FoxMedia Czech Republic',
-  projects: 2,
-  websites: 4,
-}, {
-  id: 'l5498dmn20-cn430392n2340-2',
-  name: 'Koh-I-Noor',
-  projects: 1,
-  websites: 1,
-}].map((rec, index) => {
-  const res = {
-    ...rec,
-    key: index,
-  }
-
-  return res;
-});
 
 const Clients = () => {
   const [search, setSearch] = useState('');
@@ -172,11 +47,44 @@ const Clients = () => {
     setSearch(val);
   };
 
+  const handleNewClient = () => {
+    history.push('/client');
+  };
+
+  const [data, errors, loading] = useClients();
+
+  if (errors) {
+    return (
+      <div>
+        <Row style={{ marginBottom: '42px' }}>
+          <Button type="primary" style={{ marginRight: '24px' }} onClick={handleNewClient}>Add new Client</Button>
+          <Input.Search
+            placeholder="Search for Client"
+            enterButton="Search"
+            style={{ width: '520px' }}
+            onSearch={updateSearch}
+          />
+        </Row>
+        <Row>
+          {errors.map((err, index) => (
+            <Alert
+              message="Error"
+              key={index}
+              description={err.message}
+              type="error"
+              showIcon={true}
+            />
+          ))}
+        </Row>
+      </div>
+    );
+  }
+
   // Filter data before render
   const filterRegEx = RegExp(`.*${search}.*`);
-  let data = [ ...dataSource ];
+  let filteredData = [ ...data ];
   if (search.length > 1) {
-    data = dataSource.filter((rec) => {
+    filteredData = data.filter((rec) => {
       return filterRegEx.test(rec.name)
     });
   }
@@ -184,7 +92,7 @@ const Clients = () => {
   return (
     <div>
       <Row style={{ marginBottom: '42px' }}>
-        <Button type="primary" style={{ marginRight: '24px' }}>Add new Client</Button>
+        <Button type="primary" style={{ marginRight: '24px' }} onClick={handleNewClient}>Add new Client</Button>
         <Input.Search
           placeholder="Search for Client"
           enterButton="Search"
@@ -195,12 +103,10 @@ const Clients = () => {
       <Row>
         <Table
           columns={columns}
-          dataSource={data}
+          dataSource={filteredData}
           size="middle"
+          loading={loading}
         />
-      </Row>
-      <Row style={{ marginTop: '42px' }}>
-        <Form />
       </Row>
     </div>
   );

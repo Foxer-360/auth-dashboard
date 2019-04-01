@@ -24,6 +24,7 @@ const getMenuKeyFromPath = (path: string): string => {
     case 'user':
     case 'users':
       return 'users';
+    case 'client':
     case 'clients':
       return 'clients';
     case 'settings':
