@@ -19,7 +19,7 @@ const useAuth0User = (): [boolean, IAuthUserProperties, string[] | null] => {
 
   const USER_PROFILE = gql`
     query UserProfile($auth0Id: ID!) {
-      users(
+      user(
         where: {
           auth0Id: $auth0Id
         }
@@ -70,9 +70,9 @@ const useAuth0User = (): [boolean, IAuthUserProperties, string[] | null] => {
             'Error while loading user profile',
           ]));
           setLoading(false);
-          return;
+          return Promise.resolve();
         }
-        if (!data || !data.users || !data.users[0]) {
+        if (!data || !data.user) {
           // Error or User is not found
           // tslint:disable-next-line:no-console
           console.log(`%c[Auth]%c User with Auth0 ID %c${auth0Id}%c was not found in our Auth System!`,
@@ -82,10 +82,10 @@ const useAuth0User = (): [boolean, IAuthUserProperties, string[] | null] => {
             `User with Auth ID ${auth0Id} was not found in our Auth System!`,
           ]));
           setLoading(false);
-          return;
+          return Promise.resolve();
         }
 
-        const profile = data.users[0];
+        const profile = data.user;
         setState(old => ({
           ...old,
           auth0Id,
@@ -98,6 +98,44 @@ const useAuth0User = (): [boolean, IAuthUserProperties, string[] | null] => {
           userId: profile.id,
         }));
         setLoading(false);
+
+        return Promise.resolve();
+      })
+      .then(() => {
+        client.cache.watch({
+          callback: ({ result: { user }, complete }) => {
+            if (!complete) {
+              return;
+            }
+            if (!user) {
+              return;
+            }
+            // Check if something was changed
+            let changed = false;
+            if (state.avatar !== user.avatar) {
+              changed = true;
+            }
+            if (state.isSuperUser !== user.superuser) {
+              changed = true;
+            }
+            if (state.name !== user.name) {
+              changed = true;
+            }
+
+            if (changed) {
+              setState(old => ({
+                ...old,
+                avatar: user.avatar,
+                isSuperUser: user.superuser,
+                name: user.name,
+              }));
+            }
+          },
+          optimistic: false,
+          query: USER_PROFILE,
+          variables: { auth0Id },
+        });
+
       });
 
       return;

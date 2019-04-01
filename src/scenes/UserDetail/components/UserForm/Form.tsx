@@ -21,6 +21,7 @@ export interface IProperties {
   disabled?: boolean;
 
   onCancel?: () => void;
+  onSave?: (data: any, create: boolean) => void;
 }
 
 interface IState {
@@ -56,9 +57,6 @@ const defaultValues = {
 const Form = (props: IProperties) => {
   const [state, setState] = useState(defaultValues);
 
-  // tslint:disable-next-line:no-console
-  console.log(`[UserForm] Rerendered... State was.. `, { ...state });
-
   useEffect(() => {
     // Copy props into state
     if (!state.touched && !props.isNew) {
@@ -70,6 +68,29 @@ const Form = (props: IProperties) => {
       });
     }
   });
+
+  const handleOnSave = () => {
+    if (props.onSave) {
+      const data = {
+        ...state,
+        enabledProjects: state.projects,
+        enabledWebsites: state.websites,
+        superuser: state.isSuperuser,
+      };
+      delete data.auth0Id;
+      delete data.isSuperuser;
+      delete data.projects;
+      delete data.websites;
+      delete data.touched;
+
+      if (!props.isNew) {
+        delete data.email;
+        delete data.password;
+      }
+
+      props.onSave(data, props.isNew);
+    }
+  };
 
   const handleOnCancel = () => {
     if (props.onCancel) {
@@ -102,12 +123,13 @@ const Form = (props: IProperties) => {
             websites={state.websites}
             owns={state.owns}
             clients={state.clients}
+            password={props.isNew ? state.password : null}
           />
         </Tabs.TabPane>
         <Tabs.TabPane tab="Rules" key="rules">Rules</Tabs.TabPane>
       </Tabs>
       <div style={{ marginTop: '24px', float: 'right', marginRight: '12px' }}>
-        <Button type="primary" style={{ marginRight: '8px' }}>{props.isNew ? 'Create' : 'Save'}</Button>
+        <Button type="primary" style={{ marginRight: '8px' }} onClick={handleOnSave}>{props.isNew ? 'Create' : 'Save'}</Button>
         <Button type="default" onClick={handleOnCancel}>Cancel</Button>
       </div>
     </div>

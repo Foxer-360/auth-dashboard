@@ -1,4 +1,4 @@
-import { Alert, Col, Input, Radio, Row } from 'antd';
+import { Alert, Col, Icon, Input, Radio, Row } from 'antd';
 import * as React from 'react';
 import { useContext } from 'react';
 
@@ -18,6 +18,7 @@ export interface IProperties {
   websites: string[];
   owns: string[];
   clients: string[];
+  password?: string | null;
 
   onChange?: (property: string, value: any) => void;
   isEmailDisabled?: boolean;
@@ -88,6 +89,12 @@ const Base = (props: IProperties) => {
     }
   };
 
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (props.onChange) {
+      props.onChange('password', e.target.value);
+    }
+  }
+
   const formRowStyle = {
     marginBottom: '12px',
   } as React.CSSProperties;
@@ -137,6 +144,14 @@ const Base = (props: IProperties) => {
           <label>Email</label>
           <Input onChange={handleEmailChange} disabled={disabledEmail} value={props.email} />
         </Row>
+        {props.password !== null ?
+          <Row style={formRowStyle}>
+            <label>Password</label>
+            <Input.Password onChange={handlePasswordChange} value={props.password} addonBefore={<Icon type="lock" />} />
+          </Row>
+          :
+          null
+        }
         <Row style={formRowStyle}>
           <label>Avatar</label>
           <Input disabled={disabled} onChange={handleAvatarChange} value={props.avatar} addonAfter="URL" />
