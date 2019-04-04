@@ -5,7 +5,7 @@ import { getMainDefinition } from 'apollo-utilities';
 import { OperationDefinitionNode } from 'graphql';
 
 import { readEnvironmentVariable } from '@source/utils';
-import { authLink, errorLink, httpLink, stateLink, wsLink } from './links';
+import { authLink, errorLink, httpLink, stateLink/*, wsLink*/ } from './links';
 
 // Load environment (development, production) from .env
 const Env = readEnvironmentVariable('node_env').toLowerCase();
@@ -19,7 +19,7 @@ const link = split(
     const { kind, operation } = getMainDefinition(query) as OperationDefinitionNode;
     return kind === 'OperationDefinition' && operation === 'subscription';
   },
-  wsLink,
+  // wsLink,
   httpLink
 );
 
