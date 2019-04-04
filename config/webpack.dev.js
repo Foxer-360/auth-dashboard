@@ -110,6 +110,10 @@ module.exports = {
     'antd': 'antd',
   },
   devServer: {
+    allowedHosts: [
+      'auth.foxer360.com',
+      'localhost'
+    ],
     contentBase: [
       publicDir,
       react,
@@ -121,8 +125,10 @@ module.exports = {
     port: dashboardPort,
     host: dashboardHost,
     hot: true,
+    https: false,
     open: true,
     noInfo: false,
+    inline: true,
     watchOptions: {
       aggregateTimeout: 300,
       poll: 1000

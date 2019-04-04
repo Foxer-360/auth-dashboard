@@ -24,7 +24,7 @@ const Auth0Def = {
   domain: readEnvironmentVariable('auth0_client_domain'),
   redirect: readEnvironmentVariable('auth0_redirect'),
   responseType: 'token id_token',
-  returnTo: 'http://localhost:9000',
+  returnTo: readEnvironmentVariable('auth0_return_to'),
   scope: 'openid profile email picture',
 };
 
