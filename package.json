@@ -1,6 +1,6 @@
 {
   "name": "@foxer360/auth-dashboard",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Full user management for authorization server for the Foxer360 system.",
   "main": "src/index.tsx",
   "repository": "git@github.com:Foxer-360/auth-dashboard.git",

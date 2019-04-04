@@ -30,6 +30,20 @@ const react_dom = path.resolve(node_modules, 'react-dom/umd');
 const antd = path.resolve(node_modules, 'antd/dist');
 const moment = path.resolve(node_modules, 'moment/min');
 
+// Check DASHBOARD_PORT in .env
+let dashboardPort = Number(process.env.DASHBOARD_PORT);
+if (isNaN(dashboardPort) || !dashboardPort) {
+  console.log('Port for Dashboard was not set! Using default port 9000');
+  dashboardPort = 9000;
+}
+
+// Check DASHBOARD_HOST in .env
+let dashboardHost = process.env.DASHBOARD_HOST;
+if (!dashboardHost || dashboardHost.length < 2) {
+  console.log('Host for Dashboard was not set! Using default host localhost');
+  dashboardHost = 'localhost';
+}
+
 module.exports = {
   entry: entryFile,
   output: {
@@ -104,7 +118,8 @@ module.exports = {
       antd
     ],
     compress: true,
-    port: 9000,
+    port: dashboardPort,
+    host: dashboardHost,
     hot: true,
     open: true,
     noInfo: false,

@@ -3,7 +3,6 @@ import { setContext } from 'apollo-link-context';
 import { onError } from 'apollo-link-error';
 import { HttpLink } from 'apollo-link-http';
 import { withClientState } from 'apollo-link-state';
-import { WebSocketLink } from 'apollo-link-ws';
 import { GraphQLError } from 'graphql';
 
 import { getAccessToken } from '@source/services/auth0';
@@ -19,14 +18,6 @@ const Env = readEnvironmentVariable('node_env');
 const stateLink = (cache: InMemoryCache) => withClientState({
   cache,
   ...localState,
-});
-
-// WebSocket linkt for subscriptions on GraphQL
-const subscriptionsUrl = buildUrlFromEnv(
-  'graphql_subscriptions_host', 'graphql_subscriptions_port', 'graphql_subscriptions_path', 'ws');
-const wsLink = new WebSocketLink({
-  options: { reconnect: true },
-  uri: subscriptionsUrl,
 });
 
 // HTTP link, this is main link for graphql communication
@@ -99,5 +90,4 @@ export {
   errorLink,
   httpLink,
   stateLink,
-  wsLink,
 };
